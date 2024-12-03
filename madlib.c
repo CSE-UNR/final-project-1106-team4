@@ -13,11 +13,13 @@
 
 // FUNCTION PROTOTYPES BELOW
 int getStringLength(char str[]); 
+int getNumLinesFromFile(FILE* fileToRead, int maxColSize);
 
 void requestUserInput(int size, char madlibChars[], char madlibResponses[][MAX_STRING_SIZE]);
 void removeEndlineChar (int size, char string[]);
 void removeEndlineChar2 (char str[]);
 void handleReplacable(int rows, int cols, char thing[][cols]);
+void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]);
 
 // MAIN FUNCTION BELOW
 int main(){	
@@ -61,8 +63,30 @@ int getStringLength(char str[]){
 	
 }// END of getStringLength
 
-
-
+void handleReplacable(int rows, int cols, char thing[][cols]){
+    for (int i = 0; i < rows; i++){
+        // Do checking and prompting logic here
+        if (getStringLength(thing[i]) == 1){
+            switch (thing[i][0]){
+                case 'A'://Adjective
+                    printf("Please enter an adjective: ");
+                    fgets(thing[i], cols, stdin);
+                    thing[i][getStringLength(thing[i])-1] = '\0';
+                    break;
+                case 'N'://Noun
+                    printf("Please enter a noun: ");
+                    fgets(thing[i], cols, stdin);
+                    thing[i][getStringLength(thing[i])-1] = '\0';
+                    break;
+                case 'V': //Verb
+                    printf("Please enter a verb: ");
+                    fgets(thing[i], cols, stdin);
+                    thing[i][getStringLength(thing[i])-1] = '\0';
+                    break;
+            }
+        }
+    }
+}
 
 /*
 // PURPOSE: Creates a char var holder and interates through a char array to display to the screen requests and waits for a response before reasking.	
@@ -106,27 +130,3 @@ void removeEndlineChar2 (char str[]){
 	
 } // END of removeEndLineChar2
 */
-void handleReplacable(int rows, int cols, char thing[][cols]){
-    for (int i = 0; i < rows; i++){
-        // Do checking and prompting logic here
-        if (getStringLength(thing[i]) == 1){
-            switch (thing[i][0]){
-                case 'A'://Adjective
-                    printf("Please enter an adjective: ");
-                    fgets(thing[i], cols, stdin);
-                    thing[i][getStringLength(thing[i])-1] = '\0';
-                    break;
-                case 'N'://Noun
-                    printf("Please enter a noun: ");
-                    fgets(thing[i], cols, stdin);
-                    thing[i][getStringLength(thing[i])-1] = '\0';
-                    break;
-                case 'V': //Verb
-                    printf("Please enter a verb: ");
-                    fgets(thing[i], cols, stdin);
-                    thing[i][getStringLength(thing[i])-1] = '\0';
-                    break;
-            }
-        }
-    }
-}
