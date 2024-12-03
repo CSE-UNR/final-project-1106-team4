@@ -2,14 +2,16 @@
 // Date: 12/02/20
 // Purpose: To create a Madlib game that a user can play within the terminal.
 
+//TO-DO: Remove newlines if present
+
 #include <stdio.h>
 
 // MACROS
 #define MAX_STRING_SIZE 1000
 
 // FILES
-#define INPUT_FILE_1 madlib1.txt
-#define INPUT_FILE_2 madlib2.txt
+#define INPUT_FILE_1 "madlib1.txt"
+#define INPUT_FILE_2 "madlib2.txt"
 
 // FUNCTION PROTOTYPES BELOW
 int getStringLength(char str[]); 
@@ -23,12 +25,31 @@ void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]);
 
 // MAIN FUNCTION BELOW
 int main(){	
-	FILE inputFile = fopen(INPUT_FILE_1, "r"); // Open a madlib.txt file
+	FILE* inputFile = fopen(INPUT_FILE_1, "r"); // Open a madlib.txt file
 	
 	// Verify connection is made to a madlib.txt file
 	if (inputFile == NULL){
 		printf("Could not open a file for reading!\n");
 		return 0;
+	}
+	int numRows = getNumLinesFromFile(inputFile, MAX_STRING_SIZE);
+	fclose(inputFile); // Close the madlib.txt file
+	
+	char madlibStory[numRows][MAX_STRING_SIZE];
+	
+	inputFile = fopen(INPUT_FILE_1, "r");
+	
+	// Verify connection is made to a madlib.txt file
+	if (inputFile == NULL){
+		printf("Could not open a file for reading!\n");
+		return 0;
+	}
+	storeText(inputFile, numRows, MAX_STRING_SIZE, madlibStory);
+	handleReplacable(numRows, MAX_STRING_SIZE, madlibStory);
+	
+	
+	for (int i = 0; i < numRows; i++){
+		printf("%s", madlibStory[i]);
 	}
 	
 	fclose(inputFile); // Close the madlib.txt file 
