@@ -18,26 +18,25 @@ int getStringLength(char str[]);
 int getNumLinesFromFile(FILE* fileToRead, int maxColSize);
 
 void requestUserInput(int size, char madlibChars[], char madlibResponses[][MAX_STRING_SIZE]);
-void removeEndlineChar (int size, char string[]);
-void removeEndlineChar2 (char str[]);
+void removeEndlineChar (char str[]);
 void handleReplacable(int rows, int cols, char thing[][cols]);
 void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]);
 
 // MAIN FUNCTION BELOW
 int main(){	
-	FILE* inputFile = fopen(INPUT_FILE_1, "r"); // Open a madlib.txt file
+	FILE* inputFile = fopen(INPUT_FILE_2, "r"); // Open a madlib.txt file
 	
 	// Verify connection is made to a madlib.txt file
 	if (inputFile == NULL){
 		printf("Could not open a file for reading!\n");
 		return 0;
 	}
-	int numRows = getNumLinesFromFile(inputFile, MAX_STRING_SIZE);
+	int numRows = getNumLinesFromFile(inputFile, MAX_STRING_SIZE); // Forces reopening of file 
 	fclose(inputFile); // Close the madlib.txt file
 	
 	char madlibStory[numRows][MAX_STRING_SIZE];
 	
-	inputFile = fopen(INPUT_FILE_1, "r");
+	inputFile = fopen(INPUT_FILE_2, "r");
 	
 	// Verify connection is made to a madlib.txt file
 	if (inputFile == NULL){
@@ -47,11 +46,15 @@ int main(){
 	storeText(inputFile, numRows, MAX_STRING_SIZE, madlibStory);
 	handleReplacable(numRows, MAX_STRING_SIZE, madlibStory);
 	
-	
-	for (int i = 0; i < numRows; i++){
-		printf("%s", madlibStory[i]);
+	for (int r = 0; r < numRows; r++){
+		removeEndlineChar(madlibStory[r]);
+		if (r == 0 || madlibStory[r][1] == ' '){
+			printf("%s", madlibStory[r]); //Prints string without a space if it's the first string or starts with punctation (i.e. '.').
+		} else {
+			printf(" %s", madlibStory[r]); //Prints string starting with a space in all other cases. 
+		}
 	}
-	
+	printf("\n");
 	fclose(inputFile); // Close the madlib.txt file 
 	
 	return 0;
@@ -84,70 +87,43 @@ int getStringLength(char str[]){
 	
 }// END of getStringLength
 
-void handleReplacable(int rows, int cols, char thing[][cols]){
+void handleReplacable(int rows, int cols, char str[][cols]){
     for (int i = 0; i < rows; i++){
         // Do checking and prompting logic here
-        if (getStringLength(thing[i]) == 1){
-            switch (thing[i][0]){
-                case 'A'://Adjective
+        
+        /*Debugging
+        int temp = getStringLength(str[i]);
+        printf("%d| %s", temp, str[i]);
+        */
+        
+        if (getStringLength(str[i]) - 1 <= 1){ // - 1 because the newline character adds to lines of size 1
+            switch (str[i][0]){ // Pass in values of first column of str
+                case 'A':// Adjective
                     printf("Please enter an adjective: ");
-                    fgets(thing[i], cols, stdin);
-                    thing[i][getStringLength(thing[i])-1] = '\0';
+                    fgets(str[i], cols, stdin);
+                    str[i][getStringLength(str[i]) - 1] = ' '; // Adds a space at the end of user input
                     break;
-                case 'N'://Noun
+                case 'N':// Noun
                     printf("Please enter a noun: ");
-                    fgets(thing[i], cols, stdin);
-                    thing[i][getStringLength(thing[i])-1] = '\0';
+                    fgets(str[i], cols, stdin);
+                    str[i][getStringLength(str[i]) - 1] = ' '; // Adds a space at the end of user input
                     break;
-                case 'V': //Verb
+                case 'V': // Verb
                     printf("Please enter a verb: ");
-                    fgets(thing[i], cols, stdin);
-                    thing[i][getStringLength(thing[i])-1] = '\0';
+                    fgets(str[i], cols, stdin);
+                    str[i][getStringLength(str[i]) - 1] = ' '; // Adds a space at the end of user input
                     break;
             }
         }
     }
-}
+} //END of handleReplacable
 
-/*
-// PURPOSE: Creates a char var holder and interates through a char array to display to the screen requests and waits for a response before reasking.	
-void requestUserInput(int size, char madlibChars[]){
-	char holder = madlibChars[0];
-	char response[MAX_STRING_SIZE];
-	
-	for (int i = 0; i < size; i++){
-		holder = madlibChars[i];
-		if (holder == 'A'){
-			printf("Please enter an adjective: ");	
-		} else {
-			printf("Please enter a ");
-			if (holder == 'N'){
-				printf("noun: ");
-			} else if (holder == 'V'){
-				printf("verb: ");
-			} // End of nested if/else if statement
-		} // End of if/else statement
-		
-		fgets(responses, size, stdin);
-		
-	} // End of for loop	
+void removeEndlineChar (char str[]){
+ // PURPOSE: gets the index of the endline character and converts it to a space. 	
+	int endlineIndex = getStringLength(str) - 1; // Gets the index of the endline character (\n)
+	str[endlineIndex] = '\0'; // Changes the endline to a space ( )
+} // END Of removeEndlineChar	
 
-}// END of requestUserInput
 
-void removeEndlineChar (int size, char string[]){
-// PURPOSE: Interates through a string and once a null character is detected, makes the character a space (' ')	
-	for (int i = 0; i < size; i++){
-		if (string[i] == '\0'){
-			string[i] = ' ';
-		}
-	}
-	
-}// END of removeEndLineChar
 
-// Another way to write removeEndlineChar
-void removeEndlineChar2 (char str[]){
-	int endlineIndex = getStringLength(str); 
-	str[endlineIndex] = ' '; //Sets the endline character of the string as a space 
-	
-} // END of removeEndLineChar2
-*/
+
