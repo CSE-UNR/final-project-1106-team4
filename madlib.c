@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 // MACROS
+#define MAX_ROWS 50
 #define MAX_STRING_SIZE 1000
 
 // FILES
@@ -14,16 +15,17 @@
 #define INPUT_FILE_2 "madlib2.txt"
 
 // FUNCTION PROTOTYPES BELOW
-int getStringLength(char str[]); 
-int getNumLinesFromFile(FILE* fileToRead, int maxColSize);
-
-void requestUserInput(int size, char madlibChars[], char madlibResponses[][MAX_STRING_SIZE]);
+int getStringLength(char str[]);
+ 
 void removeEndlineChar (char str[]);
 void handleReplacable(int rows, int cols, char thing[][cols]);
 void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]);
+void displayFullMadlib(int rows, int cols, char stringArray[][cols]);
 
 // MAIN FUNCTION BELOW
 int main(){	
+	char madlibStory[MAX_ROWS][MAX_STRING_SIZE];
+
 	FILE* inputFile = fopen(INPUT_FILE_2, "r"); // Open a madlib.txt file
 	
 	// Verify connection is made to a madlib.txt file
@@ -31,22 +33,11 @@ int main(){
 		printf("Could not open a file for reading!\n");
 		return 0;
 	}
-	int numRows = getNumLinesFromFile(inputFile, MAX_STRING_SIZE); // Forces reopening of file 
-	fclose(inputFile); // Close the madlib.txt file
 	
-	char madlibStory[numRows][MAX_STRING_SIZE];
+	storeText(inputFile, MAX_ROWS, MAX_STRING_SIZE, madlibStory);
+	handleReplacable(MAX_ROWS, MAX_STRING_SIZE, madlibStory);
 	
-	inputFile = fopen(INPUT_FILE_2, "r");
-	
-	// Verify connection is made to a madlib.txt file
-	if (inputFile == NULL){
-		printf("Could not open a file for reading!\n");
-		return 0;
-	}
-	storeText(inputFile, numRows, MAX_STRING_SIZE, madlibStory);
-	handleReplacable(numRows, MAX_STRING_SIZE, madlibStory);
-	
-	for (int r = 0; r < numRows; r++){
+	for (int r = 0; madlibStory[r][0] != '\0'; r++){
 		removeEndlineChar(madlibStory[r]);
 		if (r == 0 || madlibStory[r][1] == ' '){
 			printf("%s", madlibStory[r]); //Prints string without a space if it's the first string or starts with punctation (i.e. '.').
@@ -55,28 +46,33 @@ int main(){
 		}
 	}
 	printf("\n");
+	
 	fclose(inputFile); // Close the madlib.txt file 
 	
 	return 0;
 	
 }// END of main
 
+// FUNCTION DEFINITIONS BELOW
+
+void displayFullMadlib(int rows, int cols, char stringArray[][cols]){
+	for (int r = 0; stringArray[r][0] != '\0'; r++){
+		removeEndlineChar(stringArray[r]);
+		if (r == 0 || stringArray[r][1] == ' '){
+			printf("%s", stringArray[r]); //Prints string without a space if it's the first string or starts with punctation (i.e. '.').
+		} else {
+			printf(" %s", stringArray[r]); //Prints string starting with a space in all other cases. 
+		}
+	}
+	printf("\n");
+}
+
 void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]){
 	for (int i = 0; i < rows; i++){
 		fgets(str[i], cols, fileToRead); // At the "i"th row of str, of size cols, appends from fileToRead
 	}
-}
+} // END of storeText
 
-int getNumLinesFromFile(FILE* fileToRead, int maxColSize){
-	int counter = 0;
-	char temp[maxColSize];
-	while (fgets(temp, maxColSize, fileToRead) != NULL){
-		counter++;
-	}
-	return counter;
-}
-
-// FUNCTION DEFINITIONS BELOW
 int getStringLength(char str[]){
 // PURPOSE: gets the length of a string using a for loop to count through how many indexes it takes until a null character ('\0') is reached.
 	int counter = 0;
@@ -85,9 +81,9 @@ int getStringLength(char str[]){
 	}
 	return counter;
 	
-}// END of getStringLength
+} // END of getStringLength
 
-void handleReplacable(int rows, int cols, char str[][cols]){
+void handleReplacable(int rows, int cols, char str[][cols]){ 
     for (int i = 0; i < rows; i++){
         // Do checking and prompting logic here
         
@@ -116,14 +112,11 @@ void handleReplacable(int rows, int cols, char str[][cols]){
             }
         }
     }
-} //END of handleReplacable
+} // END of handleReplacable
 
 void removeEndlineChar (char str[]){
  // PURPOSE: gets the index of the endline character and converts it to a space. 	
 	int endlineIndex = getStringLength(str) - 1; // Gets the index of the endline character (\n)
 	str[endlineIndex] = '\0'; // Changes the endline to a space ( )
 } // END Of removeEndlineChar	
-
-
-
 
