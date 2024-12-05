@@ -15,16 +15,18 @@
 // FUNCTION PROTOTYPES BELOW
 int getStringLength(char str[]);
  
+_Bool isPunctuation(char compare);
+ 
 void removeEndlineChar (char str[]);
 void handleReplacable(int rows, int cols, char thing[][cols]);
 void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]);
 void displayFullMadlib(int rows, int cols, char stringArray[][cols]);
 
 // MAIN FUNCTION BELOW
-int main(){	
+int main(int argc, char* argv[]){	
 	char madlibStory[MAX_ROWS][MAX_STRING_SIZE];
 
-	FILE* inputFile = fopen(INPUT_FILE_2, "r"); // Open a madlib.txt file
+	FILE* inputFile = fopen(argv[1], "r"); // Open a madlib.txt file
 	
 	// Verify connection is made to a madlib.txt file
 	if (inputFile == NULL){
@@ -47,7 +49,7 @@ int main(){
 void displayFullMadlib(int rows, int cols, char stringArray[][cols]){
 	for (int r = 0; stringArray[r][0] != '\0'; r++){
 		removeEndlineChar(stringArray[r]);
-		if (r == 0 || stringArray[r][1] == ' ') {
+		if (r == 0 || isPunctuation(stringArray[r][0])) {
 			printf("%s", stringArray[r]); //Prints string without a space if it's the first string or starts with punctation (i.e. '.').
 		} else {
 			printf(" %s", stringArray[r]); //Prints string starting with a space in all other cases. 
@@ -55,6 +57,26 @@ void displayFullMadlib(int rows, int cols, char stringArray[][cols]){
 	}
 	printf("\n");
 }
+_Bool isPunctuation(char compare){
+	switch(compare){
+		case '.':
+			return 1;
+			break;
+		case ',':
+			return 1;
+			break;
+		case '?':
+			return 1;
+			break;
+		case '!':
+			return 1;
+			break;
+		//Could expand...
+		default:
+			return 0;
+			break;	
+	}	
+} // END of isPunctutation
 
 void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]){
 	for (int i = 0; i < rows; i++){
