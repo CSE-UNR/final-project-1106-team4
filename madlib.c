@@ -36,16 +36,7 @@ int main(){
 	
 	storeText(inputFile, MAX_ROWS, MAX_STRING_SIZE, madlibStory);
 	handleReplacable(MAX_ROWS, MAX_STRING_SIZE, madlibStory);
-	
-	for (int r = 0; madlibStory[r][0] != '\0'; r++){
-		removeEndlineChar(madlibStory[r]);
-		if (r == 0 || madlibStory[r][1] == ' '){
-			printf("%s", madlibStory[r]); //Prints string without a space if it's the first string or starts with punctation (i.e. '.').
-		} else {
-			printf(" %s", madlibStory[r]); //Prints string starting with a space in all other cases. 
-		}
-	}
-	printf("\n");
+	displayFullMadlib(MAX_ROWS, MAX_STRING_SIZE, madlibStory);
 	
 	fclose(inputFile); // Close the madlib.txt file 
 	
@@ -58,7 +49,7 @@ int main(){
 void displayFullMadlib(int rows, int cols, char stringArray[][cols]){
 	for (int r = 0; stringArray[r][0] != '\0'; r++){
 		removeEndlineChar(stringArray[r]);
-		if (r == 0 || stringArray[r][1] == ' '){
+		if (r == 0 || stringArray[r][1] == ' ') {
 			printf("%s", stringArray[r]); //Prints string without a space if it's the first string or starts with punctation (i.e. '.').
 		} else {
 			printf(" %s", stringArray[r]); //Prints string starting with a space in all other cases. 
