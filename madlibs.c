@@ -47,6 +47,7 @@ int main(int argc, char* argv[]){
 // FUNCTION DEFINITIONS BELOW
 
 void displayFullMadlib(int rows, int cols, char stringArray[][cols]){
+// PURPOSE: displays the Madlib with all user input and proper spacing. 	
 	for (int r = 0; stringArray[r][0] != '\0'; r++){
 		removeEndlineChar(stringArray[r]);
 		if (r == 0 || isPunctuation(stringArray[r][0])) {
@@ -58,6 +59,7 @@ void displayFullMadlib(int rows, int cols, char stringArray[][cols]){
 	printf("\n");
 }
 _Bool isPunctuation(char compare){
+// PURPOSE: returns a boolean value for proper spacing with Madlib output. 	
 	switch(compare){
 		case '.':
 			return 1;
@@ -79,6 +81,7 @@ _Bool isPunctuation(char compare){
 } // END of isPunctutation
 
 void storeText(FILE* fileToRead, int rows, int cols, char str[][cols]){
+// PURPOSE: stores strings from file into a 2D array
 	for (int i = 0; i < rows; i++){
 		fgets(str[i], cols, fileToRead); // At the "i"th row of str, of size cols, appends from fileToRead
 	}
@@ -95,13 +98,9 @@ int getStringLength(char str[]){
 } // END of getStringLength
 
 void handleReplacable(int rows, int cols, char str[][cols]){ 
+// PURPOSE: prompts user with proper prompt and gets user input    
     for (int i = 0; i < rows; i++){
         // Do checking and prompting logic here
-        
-        /*Debugging
-        int temp = getStringLength(str[i]);
-        printf("%d| %s", temp, str[i]);
-        */
         
         if (getStringLength(str[i]) - 1 <= 1){ // - 1 because the newline character adds to lines of size 1
             switch (str[i][0]){ // Pass in values of first column of str
